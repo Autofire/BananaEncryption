@@ -25,6 +25,7 @@ impl Template for DropArea {
 				)
 				.child(TextBlock::new()
 					.text(id)
+					.id("path_text")
 					.h_align("center")
 					.build(ctx)
 				)
@@ -61,7 +62,16 @@ impl Template for MainView {
 
 
         self.name("MainView")
-			.target_file("None")
+			.target_file("None again")
+			.child(
+                    Button::new()
+                        .text("Hello")
+                        .on_click(move |states, _| {
+                            //states.send_message(Message::Encrypt(String::from("Hello")), id);
+                            true
+                        })
+                        .build(ctx),
+                )
 			//.child(TextBlock::new().text(("title", id)).build(ctx))
 			//.child(MyWidget::new().build(ctx))
 			/*
