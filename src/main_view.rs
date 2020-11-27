@@ -11,8 +11,6 @@ widget!(
 impl Template for DropArea {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
-		let test = Message::Encrypt(String::from("Hi"));
-
 		self.name("Drop Area")
 			.text("Hello")
 			.child(Stack::new()
@@ -48,22 +46,36 @@ widget!(
 impl Template for MainView {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
+		let pager = Pager::new()
+			.child(TextBlock::new().text("Page 1").build(ctx))
+			.child(Container::new().build(ctx))
+			.child(TextBlock::new().text("Page 2").build(ctx))
+			.v_align("end")
+			.h_align("center")
+			.build(ctx);
+
 		let drop_area = DropArea::new()
 			.on_drop_file(move |states,path,_| {
 				println!("event triggered");
 				println!("{}", path);
-				//DropArea::text_set(&mut sctx.get(), path);
 				states.send_message(Message::Encrypt(path), id);
+				states.send_message(PagerAction::Next, pager);
 				true
 			})
 			.text(("target_file", id))
-			.v_align("center")
+			.v_align("stretch")
 			.h_align("center")
 			.build(ctx);
 
 		self.name("MainView")
 			.target_file("No file")
-			.child(drop_area)
+			.child(Stack::new()
+				.margin(10)
+				.spacing(10)
+				.child(drop_area)
+				.child(pager)
+				.build(ctx)
+			)
     }
 }
 

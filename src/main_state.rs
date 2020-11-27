@@ -30,7 +30,6 @@ impl State for MainState {
 					println!("Encrypt: {}", p);
 					self.path = p.clone();
 					MainView::target_file_set(&mut ctx.widget(), p);
-						
 				},
 				Message::Decrypt(p) => {
 					println!("Decrypt: {}", p);

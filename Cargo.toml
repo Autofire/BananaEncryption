@@ -1,5 +1,5 @@
 [package]
-name = "orbtk-sandbox"
+name = "banana_encryption"
 version = "0.1.0"
 authors = ["Autofire <Autofire@users.noreply.github.com>"]
 edition = "2018"
