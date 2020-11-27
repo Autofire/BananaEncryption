@@ -1,6 +1,9 @@
 use orbtk::prelude::*;
 
-use crate::{MainState, Message};
+use crate::{
+	MainState, Message,
+	get_file_type,
+};
 
 widget!(
 	DropArea: DropHandler {
@@ -58,7 +61,8 @@ impl Template for MainView {
 			.on_drop_file(move |states,path,_| {
 				println!("event triggered");
 				println!("{}", path);
-				states.send_message(Message::Encrypt(path), id);
+				println!("{:?}", get_file_type(&path));
+				states.send_message(Message::NewFile(path), id);
 				states.send_message(PagerAction::Next, pager);
 				true
 			})

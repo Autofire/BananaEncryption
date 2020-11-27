@@ -3,9 +3,8 @@ use orbtk::prelude::*;
 use crate::MainView;
 
 pub enum Message {
-	Encrypt(String),
-	Decrypt(String),
-	Clear,
+	NewFile(String),
+	ClearFile,
 }
 
 #[derive(Default, AsAny)]
@@ -26,16 +25,14 @@ impl State for MainState {
 
 		for message in messages.read::<Message>() {
 			match message {
-				Message::Encrypt(p) => {
+				Message::NewFile(p) => {
 					println!("Encrypt: {}", p);
 					self.path = p.clone();
 					MainView::target_file_set(&mut ctx.widget(), p);
 				},
-				Message::Decrypt(p) => {
-					println!("Decrypt: {}", p);
-				},
-				Message::Clear => {
+				Message::ClearFile => {
 					println!("Clear");
+					MainView::target_file_set(&mut ctx.widget(), String::from("No file"));
 				}
 			}
 		}
