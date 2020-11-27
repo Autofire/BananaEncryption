@@ -29,9 +29,7 @@ impl State for MainState {
 				Message::Encrypt(p) => {
 					println!("Encrypt: {}", p);
 					self.path = p.clone();
-					MainView::target_file_set(&mut ctx.widget(), String::from("Updated string"));
-					ctx.child("path_text")
-						.get_mut::<String>("text").push('a'); //= String::from("updated");
+					MainView::target_file_set(&mut ctx.widget(), p);
 						
 				},
 				Message::Decrypt(p) => {

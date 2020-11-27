@@ -27,6 +27,7 @@ impl Template for DropArea {
 					.text(id)
 					.id("path_text")
 					.h_align("center")
+					.localizable(false)
 					.build(ctx)
 				)
 				.build(ctx)
@@ -47,7 +48,7 @@ widget!(
 impl Template for MainView {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
-		let drop_page = DropArea::new()
+		let drop_area = DropArea::new()
 			.on_drop_file(move |states,path,_| {
 				println!("event triggered");
 				println!("{}", path);
@@ -60,49 +61,9 @@ impl Template for MainView {
 			.h_align("center")
 			.build(ctx);
 
-
-        self.name("MainView")
-			.target_file("None again")
-			.child(
-                    Button::new()
-                        .text("Hello")
-                        .on_click(move |states, _| {
-                            //states.send_message(Message::Encrypt(String::from("Hello")), id);
-                            true
-                        })
-                        .build(ctx),
-                )
-			//.child(TextBlock::new().text(("title", id)).build(ctx))
-			//.child(MyWidget::new().build(ctx))
-			/*
-			.child(DropArea::new()
-				.on_drop_file(|_,path,_| {
-					println!("event triggered");
-					println!("{}", path);
-					true
-				})
-				.v_align("center")
-				.h_align("center")
-				.build(ctx)
-			)
-			*/
-			.child(drop_page)
+		self.name("MainView")
+			.target_file("No file")
+			.child(drop_area)
     }
 }
-
-	/*
-		let pager = Pager::new()
-			.child(TextBlock::new().text("Page 1").build(ctx))
-			.child(TextBlock::new().text("Page 2").build(ctx))
-			.build(ctx);
-
-		let next_button = Button::new()
-			.enabled(("next_enabled", pager))
-			.text("next")
-			.on_click(move |states, _| {
-					states.send_message(PagerAction::Next, pager);
-					true
-					})
-			.build(ctx);
-	*/
 
