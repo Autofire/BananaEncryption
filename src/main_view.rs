@@ -2,7 +2,7 @@ use orbtk::prelude::*;
 
 use crate::{
 	MainState, Message,
-	get_file_type,
+	get_file_type, FileType
 };
 
 widget!(
@@ -42,28 +42,59 @@ impl Template for DropArea {
 widget!(
     MainView<MainState> {
         title: String,
-		target_file: String
+		target_file: String,
+		password: String,
+		confirmation_password: String
     }
 );
 
 impl Template for MainView {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
+		let cancel_button_template = Button::new()
+			.text("Cancel")
+			.on_click(move |states, _| {
+				states.send_message(Message::ClearFile, id);
+				true
+			});
+
+		let blank_page = Container::new().build(ctx);
+
+		let encrypt_page = Stack::new()
+			.child(PasswordBox::new().water_mark("Password...").build(ctx))
+			.child(PasswordBox::new().water_mark("Confirm password...").build(ctx))
+			.child(cancel_button_template.build(ctx))
+			.build(ctx);
+
+		let decrypt_page = Stack::new()
+			.child(PasswordBox::new().water_mark("Password...").build(ctx))
+			//.child(cancel_button_template.clone().build(ctx))
+			.build(ctx);
+
 		let pager = Pager::new()
-			.child(TextBlock::new().text("Page 1").build(ctx))
-			.child(Container::new().build(ctx))
-			.child(TextBlock::new().text("Page 2").build(ctx))
+			.id("pager")
+			.child(blank_page)
+			.child(encrypt_page)
+			.child(decrypt_page)
 			.v_align("end")
 			.h_align("center")
 			.build(ctx);
 
 		let drop_area = DropArea::new()
 			.on_drop_file(move |states,path,_| {
-				println!("event triggered");
-				println!("{}", path);
-				println!("{:?}", get_file_type(&path));
+				match get_file_type(&path) {
+					FileType::Encrypted => {
+						states.send_message(
+							PagerAction::Navigate(1), pager
+						);
+					}
+					FileType::Decrypted => {
+						states.send_message(
+							PagerAction::Navigate(2), pager
+						);
+					}
+				}
 				states.send_message(Message::NewFile(path), id);
-				states.send_message(PagerAction::Next, pager);
 				true
 			})
 			.text(("target_file", id))

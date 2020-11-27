@@ -1,6 +1,9 @@
 use orbtk::prelude::*;
 
-use crate::MainView;
+use crate::{
+	MainView,
+	get_file_type, FileType
+};
 
 pub enum Message {
 	NewFile(String),
@@ -26,6 +29,13 @@ impl State for MainState {
 		for message in messages.read::<Message>() {
 			match message {
 				Message::NewFile(p) => {
+					match get_file_type(&p) {
+						FileType::Encrypted => {
+							//Pager::from(ctx.child("input")).navigate(1);
+						}
+						FileType::Decrypted => {
+						}
+					}
 					println!("Encrypt: {}", p);
 					self.path = p.clone();
 					MainView::target_file_set(&mut ctx.widget(), p);
