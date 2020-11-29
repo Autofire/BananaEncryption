@@ -42,7 +42,10 @@ impl State for MainState {
 				},
 				Message::ClearFile => {
 					println!("Clear");
-					MainView::target_file_set(&mut ctx.widget(), String::from("No file"));
+					MainView::target_file_set(
+						&mut ctx.widget(),
+						String::from("No file")
+					);
 				}
 			}
 		}

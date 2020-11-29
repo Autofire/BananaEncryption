@@ -38,6 +38,25 @@ impl Template for DropArea {
 
 }
 
+fn build_confirm_button(id: Entity, ctx: &mut BuildContext) -> Entity {
+	Button::new()
+		.text("Confirm")
+		.on_click(move |states, _| {
+			states.send_message(Message::ClearFile, id);
+			true
+		})
+		.build(ctx)
+}
+
+fn build_cancel_button(id: Entity, ctx: &mut BuildContext) -> Entity {
+	Button::new()
+		.text("Cancel")
+		.on_click(move |states, _| {
+			states.send_message(Message::ClearFile, id);
+			true
+		})
+		.build(ctx)
+}
 
 widget!(
     MainView<MainState> {
@@ -51,24 +70,23 @@ widget!(
 impl Template for MainView {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
-		let cancel_button_template = Button::new()
-			.text("Cancel")
-			.on_click(move |states, _| {
-				states.send_message(Message::ClearFile, id);
-				true
-			});
-
 		let blank_page = Container::new().build(ctx);
 
 		let encrypt_page = Stack::new()
 			.child(PasswordBox::new().water_mark("Password...").build(ctx))
 			.child(PasswordBox::new().water_mark("Confirm password...").build(ctx))
-			.child(cancel_button_template.build(ctx))
+			.child(build_confirm_button(id, ctx))
+			.child(build_cancel_button(id, ctx))
 			.build(ctx);
 
 		let decrypt_page = Stack::new()
-			.child(PasswordBox::new().water_mark("Password...").build(ctx))
-			//.child(cancel_button_template.clone().build(ctx))
+			.child(PasswordBox::new()
+				.text(("password", id))
+				.water_mark("Password...")
+				.build(ctx)
+			)
+			.child(build_confirm_button(id, ctx))
+			.child(build_cancel_button(id, ctx))
 			.build(ctx);
 
 		let pager = Pager::new()
