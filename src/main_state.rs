@@ -46,6 +46,8 @@ impl State for MainState {
 						&mut ctx.widget(),
 						String::from("No file")
 					);
+					//MainView::password(&mut ctx.widget(), String::from("hi"));
+					println!("{}", ctx.child("password_thing").get::<String>("text"));
 				}
 			}
 		}

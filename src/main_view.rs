@@ -81,6 +81,7 @@ impl Template for MainView {
 
 		let decrypt_page = Stack::new()
 			.child(PasswordBox::new()
+				.id("password_thing")
 				.text(("password", id))
 				.water_mark("Password...")
 				.build(ctx)
