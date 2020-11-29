@@ -38,32 +38,29 @@ impl Template for DropArea {
 
 }
 
-fn build_confirm_button(id: Entity, ctx: &mut BuildContext) -> Entity {
+fn build_confirm_button(id: Entity, _ctx: &mut BuildContext) -> Button {
 	Button::new()
 		.text("Confirm")
 		.on_click(move |states, _| {
-			states.send_message(Message::ClearFile, id);
+			states.send_message(Message::Confirm, id);
 			true
 		})
-		.build(ctx)
 }
 
-fn build_cancel_button(id: Entity, ctx: &mut BuildContext) -> Entity {
+fn build_cancel_button(id: Entity, _ctx: &mut BuildContext) -> Button {
 	Button::new()
 		.text("Cancel")
 		.on_click(move |states, _| {
 			states.send_message(Message::ClearFile, id);
 			true
 		})
-		.build(ctx)
 }
 
 widget!(
     MainView<MainState> {
         title: String,
 		target_file: String,
-		password: String,
-		confirmation_password: String
+		decrypt_ok: bool
     }
 );
 
@@ -73,21 +70,32 @@ impl Template for MainView {
 		let blank_page = Container::new().build(ctx);
 
 		let encrypt_page = Stack::new()
-			.child(PasswordBox::new().water_mark("Password...").build(ctx))
-			.child(PasswordBox::new().water_mark("Confirm password...").build(ctx))
-			.child(build_confirm_button(id, ctx))
-			.child(build_cancel_button(id, ctx))
+			.child(PasswordBox::new()
+				.id("encrypt_password")
+                .water_mark("Password...")
+                .build(ctx)
+            )
+			.child(PasswordBox::new()
+				.id("encrypt_password2")
+                .water_mark("Confirm password...")
+                .build(ctx)
+            )
+			.child(build_confirm_button(id, ctx).build(ctx))
+			.child(build_cancel_button(id, ctx).build(ctx))
 			.build(ctx);
 
 		let decrypt_page = Stack::new()
 			.child(PasswordBox::new()
-				.id("password_thing")
-				.text(("password", id))
+				.id("decrypt_password")
 				.water_mark("Password...")
 				.build(ctx)
 			)
-			.child(build_confirm_button(id, ctx))
-			.child(build_cancel_button(id, ctx))
+			.child(build_confirm_button(id, ctx)
+				.id("decrypt_confirm")
+				//.enabled(("decrypt_ok", id))
+				.build(ctx)
+			)
+			.child(build_cancel_button(id, ctx).build(ctx))
 			.build(ctx);
 
 		let pager = Pager::new()
@@ -104,12 +112,12 @@ impl Template for MainView {
 				match get_file_type(&path) {
 					FileType::Encrypted => {
 						states.send_message(
-							PagerAction::Navigate(1), pager
+							PagerAction::Navigate(2), pager
 						);
 					}
 					FileType::Decrypted => {
 						states.send_message(
-							PagerAction::Navigate(2), pager
+							PagerAction::Navigate(1), pager
 						);
 					}
 				}
@@ -123,6 +131,7 @@ impl Template for MainView {
 
 		self.name("MainView")
 			.target_file("No file")
+			.decrypt_ok(true)
 			.child(Stack::new()
 				.margin(10)
 				.spacing(10)
