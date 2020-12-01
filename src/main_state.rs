@@ -1,4 +1,5 @@
 use orbtk::prelude::*;
+use crate::primes::PrimeGenerator;
 
 use crate::{
 	MainView,
@@ -29,6 +30,7 @@ impl State for MainState {
 			_registry: &mut Registry,
 			ctx: &mut Context
 	) {
+        let _pg = PrimeGenerator::new(10);
 
 		for message in messages.read::<Message>() {
 			match message {
