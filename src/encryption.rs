@@ -1,3 +1,5 @@
+use crate::primes::PrimeGenerator;
+
 #[derive(Debug)]
 pub enum FileType {
 	Encrypted,
@@ -13,12 +15,12 @@ pub fn get_file_type(path: &String) -> FileType {
 	}
 }
 
-pub fn encrypt_file(path: &String, password: &String) -> bool {
-    println!("encrypt: {}, {}",path,password);
+pub fn encrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> bool {
+    println!("encrypt: {}, {}, {}",path,password, pg[10]);
     return true;
 }
 
-pub fn decrypt_file(path: &String, password: &String) -> bool {
-    println!("decrypt: {}, {}",path,password);
+pub fn decrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> bool {
+    println!("encrypt: {}, {}, {}",path,password, pg[10]);
     return true;
 }
