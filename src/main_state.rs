@@ -14,10 +14,32 @@ pub enum Message {
 
 #[derive(Default, AsAny)]
 pub struct MainState {
-	path: String
+	path: String,
+    pg: PrimeGenerator
+}
+
+impl MainState {
+	fn reset_ui(
+			&mut self,
+			_registry: &mut Registry,
+			ctx: &mut Context
+	) {
+		MainView::target_file_set( &mut ctx.widget(), String::from("No file"));
+		ctx.child("pager").set::<usize>("current_index", 0);
+		//ctx.child("decrypt_password").set::<String>("text", String::new());
+		//ctx.child("encrypt_password").set::<String>("text", String::new());
+		//ctx.child("encrypt_password2").set::<String>("text", String::new());
+	}
 }
 
 impl State for MainState {
+
+    fn init(&mut self, _registry: &mut Registry, _ctx: &mut Context) {
+        println!("Generating primes");
+        self.pg = PrimeGenerator::new(100000);
+        println!("Done. Generated {} primes", self.pg.len());
+    }
+
 	fn update(&mut self, _: &mut Registry, ctx: &mut Context) {
 		let decrypt_password = ctx.child("decrypt_password").get::<String>("text").clone();
 		MainView::decrypt_ok_set(&mut ctx.widget(), !decrypt_password.is_empty());
@@ -27,10 +49,9 @@ impl State for MainState {
 	fn messages(
 			&mut self,
 			mut messages: MessageReader,
-			_registry: &mut Registry,
+			registry: &mut Registry,
 			ctx: &mut Context
 	) {
-        let _pg = PrimeGenerator::new(10);
 
 		for message in messages.read::<Message>() {
 			match message {
@@ -58,6 +79,7 @@ impl State for MainState {
                                 
                                 // Causes it to break
 				        	    //ctx.child("decrypt_password").get_mut::<String>("text").truncate(0);
+								self.reset_ui(registry, ctx);
                             }
                             else {
                                 println!("no password");
@@ -76,7 +98,9 @@ impl State for MainState {
                                 println!("{}", self.path);
                                 println!("{}", password);
                                 
-                                encrypt_file(&self.path, &password);
+                                if encrypt_file(&self.path, &password) {
+									self.reset_ui(registry, ctx);
+                                }
 
                                 // Causes it to break
 				        	    //ctx.child("decrypt_password").get_mut::<String>("text").truncate(0);
@@ -88,14 +112,13 @@ impl State for MainState {
 
 				Message::ClearFile => {
 					println!("Clear");
-					MainView::target_file_set(
-						&mut ctx.widget(),
-						String::from("No file")
-					);
-					//MainView::password(&mut ctx.widget(), String::from("hi"));
-					println!("{}", ctx.child("decrypt_password").get::<String>("text"));
+					self.reset_ui(registry, ctx);
 				}
 			}
 		}
 	}
+
+
+		
+
 }

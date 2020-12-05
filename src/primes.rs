@@ -1,5 +1,6 @@
 use std::ops::{Index, Range};
 
+#[derive(Default)]
 pub struct PrimeGenerator {
 	primes: Vec<u64>,
 }

@@ -47,11 +47,12 @@ fn build_confirm_button(id: Entity, _ctx: &mut BuildContext) -> Button {
 		})
 }
 
-fn build_cancel_button(id: Entity, _ctx: &mut BuildContext) -> Button {
+fn build_cancel_button(id: Entity, _ctx: &mut BuildContext, pager: Entity) -> Button {
 	Button::new()
 		.text("Cancel")
 		.on_click(move |states, _| {
 			states.send_message(Message::ClearFile, id);
+            //states.send_message(PagerAction::Navigate(0), pager);
 			true
 		})
 }
@@ -67,6 +68,12 @@ widget!(
 impl Template for MainView {
     fn template(self, id: Entity, ctx: &mut BuildContext) -> Self {
 
+		let pager = Pager::new()
+			.id("pager")
+			.v_align("end")
+			.h_align("center")
+			.build(ctx);
+
 		let blank_page = Container::new().build(ctx);
 
 		let encrypt_page = Stack::new()
@@ -81,7 +88,7 @@ impl Template for MainView {
                 .build(ctx)
             )
 			.child(build_confirm_button(id, ctx).build(ctx))
-			.child(build_cancel_button(id, ctx).build(ctx))
+			.child(build_cancel_button(id, ctx, pager).build(ctx))
 			.build(ctx);
 
 		let decrypt_page = Stack::new()
@@ -95,17 +102,9 @@ impl Template for MainView {
 				//.enabled(("decrypt_ok", id))
 				.build(ctx)
 			)
-			.child(build_cancel_button(id, ctx).build(ctx))
+			.child(build_cancel_button(id, ctx, pager).build(ctx))
 			.build(ctx);
 
-		let pager = Pager::new()
-			.id("pager")
-			.child(blank_page)
-			.child(encrypt_page)
-			.child(decrypt_page)
-			.v_align("end")
-			.h_align("center")
-			.build(ctx);
 
 		let drop_area = DropArea::new()
 			.on_drop_file(move |states,path,_| {
@@ -128,6 +127,10 @@ impl Template for MainView {
 			.v_align("stretch")
 			.h_align("center")
 			.build(ctx);
+
+        ctx.append_child(pager, blank_page);
+        ctx.append_child(pager, encrypt_page);
+        ctx.append_child(pager, decrypt_page);
 
 		self.name("MainView")
 			.target_file("No file")
