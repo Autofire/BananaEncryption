@@ -53,10 +53,19 @@ fn build_cancel_button(id: Entity, _ctx: &mut BuildContext) -> Button {
 		})
 }
 
+fn build_error_text(id: Entity) -> TextBlock {
+	TextBlock::new()
+		.text(("error", id))
+		.foreground("red")
+		.h_align("center")
+		.font_size(16)
+}
+
 widget!(
     MainView<MainState> {
         title: String,
 		target_file: String,
+		error: String,
 		decrypt_ok: bool
     }
 );
@@ -85,6 +94,7 @@ impl Template for MainView {
             )
 			.child(build_confirm_button(id, ctx).build(ctx))
 			.child(build_cancel_button(id, ctx).build(ctx))
+			.child(build_error_text(id).build(ctx))
 			.build(ctx);
 
 		let decrypt_page = Stack::new()
@@ -99,6 +109,7 @@ impl Template for MainView {
 				.build(ctx)
 			)
 			.child(build_cancel_button(id, ctx).build(ctx))
+			.child(build_error_text(id).build(ctx))
 			.build(ctx);
 
 
