@@ -56,7 +56,7 @@ fn build_cancel_button(id: Entity, _ctx: &mut BuildContext) -> Button {
 fn build_error_text(id: Entity) -> TextBlock {
 	TextBlock::new()
 		.text(("error", id))
-		.foreground("red")
+		.foreground("tomato")
 		.h_align("center")
 		.font_size(16)
 }
@@ -66,6 +66,7 @@ widget!(
         title: String,
 		target_file: String,
 		error: String,
+		success: String,
 		decrypt_ok: bool
     }
 );
@@ -112,6 +113,14 @@ impl Template for MainView {
 			.child(build_error_text(id).build(ctx))
 			.build(ctx);
 
+		let success_page = TextBlock::new()
+			.text(("success", id))
+			.foreground("lime")
+			.h_align("center")
+			.v_align("center")
+			.font_size(16)
+			.build(ctx);
+
 
 		let drop_area = DropArea::new()
 			.on_drop_file(move |states,path,_| {
@@ -126,6 +135,7 @@ impl Template for MainView {
         ctx.append_child(pager, blank_page);
         ctx.append_child(pager, encrypt_page);
         ctx.append_child(pager, decrypt_page);
+		ctx.append_child(pager, success_page);
 
 		self.name("MainView")
 			.target_file("No file")

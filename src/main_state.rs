@@ -30,6 +30,12 @@ impl MainState {
 		self.path = String::new();
 	}
 
+	fn show_success_page(&mut self, message: String, ctx: &mut Context) {
+		ctx.child("pager").set::<usize>("current_index", 3);
+		MainView::success_set( &mut ctx.widget(), message);
+	}
+		
+
 	fn process_new_file( &mut self, path: String, ctx: &mut Context) {
 		self.reset_ui(ctx);
 
@@ -64,7 +70,13 @@ impl MainState {
 		}
 		else {
 			if decrypt_file(&self.path, &password, &self.pg) {
-				self.reset_ui(ctx);
+				//self.reset_ui(ctx);
+				self.show_success_page(String::from("decryption successful"), ctx);
+			}
+			else {
+				MainView::error_set( 
+					&mut ctx.widget(), String::from("decryption failed")
+				);
 			}
 		}
 	}
@@ -82,7 +94,13 @@ impl MainState {
 		}
 		else {
 			if encrypt_file(&self.path, &password, &self.pg) {
-				self.reset_ui(ctx);
+				//self.reset_ui(ctx);
+				self.show_success_page(String::from("encryption successful"), ctx);
+			}
+			else {
+				MainView::error_set( 
+					&mut ctx.widget(), String::from("encryption failed")
+				);
 			}
 		}
 	}
