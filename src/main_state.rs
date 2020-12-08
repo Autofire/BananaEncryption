@@ -110,7 +110,7 @@ impl State for MainState {
 
     fn init(&mut self, _registry: &mut Registry, _ctx: &mut Context) {
         println!("Generating primes");
-        self.pg = PrimeGenerator::new(100000);
+        self.pg = PrimeGenerator::new(1000000);
         println!("Done. Generated {} primes", self.pg.len());
     }
 
