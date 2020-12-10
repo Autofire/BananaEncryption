@@ -15,3 +15,4 @@ debug = ["orbtk/debug"]
 [dependencies]
 orbtk = { git = "https://github.com/redox-os/orbtk.git", branch= "develop" }
 num_cpus = "1.13.0"
+rand = "0.7"
