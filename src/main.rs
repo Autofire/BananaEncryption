@@ -1,3 +1,5 @@
+#![windows_subsystem = "windows"]
+
 use orbtk::prelude::*;
 
 pub use self::main_state::*;

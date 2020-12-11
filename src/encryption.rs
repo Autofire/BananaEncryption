@@ -51,7 +51,7 @@ pub fn encrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> io
 	//call prime heres and load to byte vector. also generate a copy just in case
 	let heres_the_prime= pg[prime_array].to_string();
 	let mut prime_vector = heres_the_prime.into_bytes();
-	let prime_copy = prime_vector.clone();
+	//let prime_copy = prime_vector.clone();
 
 
 
@@ -109,7 +109,7 @@ pub fn encrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> io
 	//inserting prime vector into modified content
 	for i in 0..prime_vector.len(){
 		let position = pw_vector[0] as usize;
-		let insert = prime_copy[i];
+		let insert = prime_vector[i];
 		file_contents_modified.insert(position + i, insert);
 	}
 
