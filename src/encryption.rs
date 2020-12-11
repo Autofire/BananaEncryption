@@ -140,11 +140,10 @@ pub fn encrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> io
 	let path = file_path;
 	let path_extension = ".banana";
 	let final_path_bath = format!("{}{}", path, path_extension);
-	let mut ofile = File::create(final_path_bath)
-		.expect("unable to create file");
+	let mut ofile = File::create(final_path_bath)?;
 
 
-	ofile.write_all(final_form).expect("unable to write");
+	ofile.write_all(final_form)?;
 
 
 	Ok(())
@@ -264,11 +263,10 @@ pub fn decrypt_file(path: &String, password: &String, _pg: &PrimeGenerator) -> i
 		//writes to new file with
 		let path = short_file_path;
 		let final_path_bath = path;
-		let mut ofile = File::create(final_path_bath)
-			.expect("unable to create file");
+		let mut ofile = File::create(final_path_bath)?;
 
 
-		ofile.write_all(final_form).expect("unable to write");
+		ofile.write_all(final_form)?;
 
 	}
 
