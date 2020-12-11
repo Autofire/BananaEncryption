@@ -30,7 +30,7 @@ pub fn encrypt_file(path: &String, password: &String, pg: &PrimeGenerator) -> io
 	//open file
 	let file_path = path;
 	let f = File::open(file_path)?;
-	let buffer_size = 269420690 * 4;
+	let buffer_size = 269420690 * 16;
 	let mut reader = BufReader::with_capacity(buffer_size, f);
 
 	let capacity = reader.capacity();
@@ -162,7 +162,7 @@ pub fn decrypt_file(path: &String, password: &String, _pg: &PrimeGenerator) -> i
 	let file_path = path;
 	let mut short_file_path = file_path.to_string();
 	let f = File::open(file_path)?;
-	let buffer_size = 269420690 * 4;
+	let buffer_size = 269420690 * 16 + 2048;
 	let mut reader = BufReader::with_capacity(buffer_size, f);
 
 	let capacity = reader.capacity();

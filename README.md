@@ -1,5 +1,7 @@
 # Banana Encryption
 
-Encrypt files. Decrypt bananas. It makes sense.
+Encrypt files and make them into bananas.
+And then decrypt the bananas. It makes sense.
 
-A project by Daniel Edwards and Brandon Martin.
+A project by Brandon Martin and Daniel Edwards built in Rust.
+
