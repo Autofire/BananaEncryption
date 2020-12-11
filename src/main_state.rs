@@ -65,19 +65,10 @@ impl MainState {
 	fn do_decrypt( &mut self, ctx: &mut Context) {
 		let password = ctx.child("decrypt_password").get::<String>("text").clone();
 		if password.is_empty() {
-			println!("no password");
-			MainView::error_set( &mut ctx.widget(), String::from("no password"));
+			self.show_error("No password", ctx);
 		}
 		else {
-			if decrypt_file(&self.path, &password, &self.pg) {
-				//self.reset_ui(ctx);
-				self.show_success_page(String::from("decryption successful"), ctx);
-			}
-			else {
-				MainView::error_set( 
-					&mut ctx.widget(), String::from("decryption failed")
-				);
-			}
+			self.show_io_result(decrypt_file(&self.path, &password, &self.pg), "Decryption", ctx);
 		}
 	}
 		
@@ -85,24 +76,38 @@ impl MainState {
 		let password = ctx.child("encrypt_password").get::<String>("text").clone();
 		let password2 = ctx.child("encrypt_password2").get::<String>("text").clone();
 		if password != password2 {
-			println!("password mismatch");
-			MainView::error_set( &mut ctx.widget(), String::from("password mismatch"));
+			self.show_error("Password mismatch", ctx);
 		}
 		else if password.is_empty() {
-			println!("no password");
-			MainView::error_set( &mut ctx.widget(), String::from("no password"));
+			self.show_error("No password", ctx);
+		}
+		else if password.len() < 6 {
+			self.show_error("Password too short", ctx);
 		}
 		else {
-			if encrypt_file(&self.path, &password, &self.pg) {
-				//self.reset_ui(ctx);
-				self.show_success_page(String::from("encryption successful"), ctx);
-			}
-			else {
-				MainView::error_set( 
-					&mut ctx.widget(), String::from("encryption failed")
-				);
+			self.show_io_result(encrypt_file(&self.path, &password, &self.pg), "Encryption", ctx);
+		}
+	}
+
+	fn show_io_result( &mut self, r: std::io::Result<()>, op_name: &str, ctx: &mut Context) {
+		match r {
+			Ok(_) => {
+				self.show_success_page(format!("{} successful", op_name), ctx);
+			},
+			Err(e) => {
+				if let Some(inner) = e.into_inner() {
+					self.show_error(&format!("{}", inner)[..], ctx);
+				}
+				else {
+					self.show_error(&format!("{} failed", op_name)[..], ctx);
+				}
 			}
 		}
+	}
+
+	fn show_error( &mut self, msg: &str, ctx: &mut Context) {
+		println!("{}", msg);
+		MainView::error_set( &mut ctx.widget(), msg);
 	}
 }
 

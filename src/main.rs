@@ -11,14 +11,14 @@ mod encryption;
 mod primes;
 
 fn main() {
-    Application::from_name("orbtk-sandbox")
+    Application::from_name("Banana Encryption")
         .window(move |ctx| {
             Window::new()
-                .title("orbtk-sandbox")
+                .title("Banana Encryption")
                 .position((100.0, 100.0))
                 .size(300.0, 300.0)
                 .resizeable(true)
-                .child(MainView::new().title("Hello OrbTk").build(ctx))
+                .child(MainView::new().build(ctx))
                 .build(ctx)
         })
         .run();
